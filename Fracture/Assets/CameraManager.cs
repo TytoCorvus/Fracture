@@ -51,7 +51,7 @@ public class CameraManager : MonoBehaviour {
 			if(CameraManager.following != null){
 				Vector3 newPos = transform.position;
 				Vector3 followingInCamPlane = new Vector3(following.transform.position.x, following.transform.position.y, transform.position.z);
-				newPos = Vector3.Lerp(newPos, followingInCamPlane, 0.9f);
+				newPos = Vector3.Lerp(newPos, followingInCamPlane, 0.7f);
 				transform.position = newPos;
 
 			}

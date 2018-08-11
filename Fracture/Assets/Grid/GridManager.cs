@@ -23,15 +23,16 @@ public class GridManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		grid = new Dictionary<GridPosition, GridSpace>();
+		occupantTracker = new OccupantTracker();
+
 		buildRegularMap(4, 6);
 		GridSpace temp = getSpace(new GridPosition(-2, -2));
 		GameObject tempObj = Instantiate(cannonPrefab);
 		if(temp == null){
 			Debug.Log("temp is null");
 		}
-		temp.setOccupant(tempObj);
 		Cannon c = tempObj.GetComponent<Cannon>();
-		c.space = temp;
+		c.setup(temp, 1, occupantTracker);
 
 		temp = getSpace(new GridPosition(0, -1));
 
@@ -39,9 +40,8 @@ public class GridManager : MonoBehaviour {
 		if(temp == null){
 			Debug.Log("temp is null");
 		}
-		temp.setOccupant(tempObj);
 		Factory f = tempObj.GetComponent<Factory>();
-		f.space = temp;
+		f.setup(temp, 1, occupantTracker);
 	}
 	
 	void Update(){
@@ -57,10 +57,10 @@ public class GridManager : MonoBehaviour {
 		for(int i=-(width/2); i < width/2 + width%2; i++){
 			for(int j=-(height/2); j < height/2 + height%2; j++){
 				if(j < 0){
-					addToGrid(new GridPosition(i, j), 0);
+					addToGrid(new GridPosition(i, j), 1);
 				}
 				else{
-					addToGrid(new GridPosition(i, j), 1);
+					addToGrid(new GridPosition(i, j), 2);
 				}
 			}
 		}
@@ -92,10 +92,10 @@ public class GridManager : MonoBehaviour {
 		Texture2D tex;
 
 		switch(playerNumber){
-			case 0:
+			case 1:
 				tex = blueTileImage;
 				break;
-			case 1:
+			case 2:
 				tex = redTileImage;
 				break;
 			default:
@@ -148,9 +148,13 @@ public class GridManager : MonoBehaviour {
 	}
 
 	public void turnPassed(){
-
+		occupantTracker.updateOccupants(1);
 	}
 	
+	public OccupantTracker getOccupantTracker(){
+		return occupantTracker;
+	}
+
 }
 
 public struct GridPosition{

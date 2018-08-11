@@ -13,4 +13,12 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	private void checkVictoryState(){
+
+	}
+
+	private void gameOver(){
+		
+	}
 }

@@ -12,21 +12,18 @@ public class Cannon : Occupant {
 	}
 
 	void Update(){
-		if(Input.GetKeyDown(KeyCode.Space)){
-			act();
-		}
 	}
-	public override void act(){
+	public override void act(Action callback){
 		GridPosition target = new GridPosition(space.getPosition().posX, space.getPosition().posY + 3);
 		bool targetAvailable = space.getManager().isSpaceInGrid(target);
 
 		if(targetAvailable){
 			Transform endpoint = space.getManager().getSpace(target).gameObject.transform;
-			StartCoroutine(cannonLaunch(endpoint));
+			StartCoroutine(cannonLaunch(endpoint, callback));
 		}
 	}
 
-	IEnumerator cannonLaunch(Transform t){
+	IEnumerator cannonLaunch(Transform t, Action callback){
 		GameObject temp = Instantiate(cannonBallPrefab);
 		temp.transform.position = transform.position + new Vector3(0.6f, 0.5f, 0f);
 		Vector3 startPosition = temp.transform.position;
@@ -48,9 +45,10 @@ public class Cannon : Occupant {
 
 		temp.transform.position = endPosition;
 
-		t.GetComponent<GridSpace>().takeDamage(1);
+		t.GetComponent<GridSpace>().damage(1);
 		yield return new WaitForSeconds(0.3f);
 		CameraManager.getInstance().release();
+		callback();
 		Destroy(temp, 0f);
 		
 	}

@@ -57,7 +57,11 @@ public class GridSpace : MonoBehaviour {
 		return false;
 	}
 
-	public void takeDamage(int dmg){
+	public void damage(int dmg){
+		if(isOccupied()){
+			occupant.GetComponent<Occupant>().damage(dmg);
+			return;
+		}
 		spaceCurrentHealth -= dmg;
 		updateStatus();		
 	}
