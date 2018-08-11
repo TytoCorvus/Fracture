@@ -6,6 +6,9 @@ public class GridManager : MonoBehaviour {
 
 	public GameObject gridSpacePrefab;
 
+	public Texture2D blueTileImage;
+	public Texture2D redTileImage;
+
 	private Dictionary<GridPosition , GridSpace> grid;
 	private Vector2 moveX = new Vector2(1.5f, -.8f);
 	private Vector2 moveY = new Vector2(1.5f, .8f);
@@ -24,7 +27,12 @@ public class GridManager : MonoBehaviour {
 		
 		for(int i=-(width/2); i < width/2 + width%2; i++){
 			for(int j=-(height/2); j < height/2 + height%2; j++){
-				addToGrid(new GridPosition(i, j), 0);
+				if(j < 0){
+					addToGrid(new GridPosition(i, j), 0);
+				}
+				else{
+					addToGrid(new GridPosition(i, j), 1);
+				}
 			}
 		}
 	}
@@ -32,27 +40,53 @@ public class GridManager : MonoBehaviour {
 	// Update is called once per frame
 
 	public void addToGrid(GridPosition gp, int playerNumber){
-		if(!grid.ContainsKey(gp)){
-			GameObject temp = Instantiate(gridSpacePrefab);
-			temp.transform.SetParent(transform);
-			Vector2 newPos = gp.posX * moveX + gp.posY * moveY;
-			temp.transform.position = new Vector3(newPos.x, newPos.y, -zDiff * (gp.posX - gp.posY));
+		//Do nothing if it already exists in the dictionary
+		if(grid.ContainsKey(gp)){
+			Debug.Log("Cannot add - Grid space already exists");
+			return;
 		}
-		else{
-			Debug.Log("Grid space already exists");
+
+		GameObject temp = Instantiate(gridSpacePrefab);
+		temp.transform.SetParent(transform);
+		Vector2 newPos = gp.posX * moveX + gp.posY * moveY;
+		temp.transform.position = new Vector3(newPos.x, newPos.y, -zDiff * (gp.posX - gp.posY));
+
+		SpriteRenderer sprite = temp.GetComponent<SpriteRenderer>();
+		Texture2D tex;
+
+		switch(playerNumber){
+			case 0:
+				tex = blueTileImage;
+				break;
+			case 1:
+				tex = redTileImage;
+				break;
+			default:
+				tex = blueTileImage;
+				break;
+		}
+
+		sprite.sprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(.5f, .5f));
+	}
+
+	public void removeFromGrid(GridPosition gp){
+		if(grid.ContainsKey(gp)){
+			grid.Remove(gp);
 		}
 	}
 
-	private int findCorrectSiblingIndex(GridPosition gp){
-		//Needs to be at a lower index than top-left and top-right
-		//Needs to be at a higher index than bot-left and bot-right
-		int result = 0;
-		
-		return result;
+	public void addtoSpace(GridPosition gp, GameObject new_occupant){
+		if(grid.ContainsKey(gp)){
+			grid[gp].setOccupant(new_occupant);
+		}
 	}
 
 	public GridSpace getSpace(GridPosition gp){
 		return new GridSpace();
+	}
+
+	public float getZDiff(){
+		return zDiff;
 	}
 	
 }

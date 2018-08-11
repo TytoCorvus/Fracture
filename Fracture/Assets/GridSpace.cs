@@ -11,9 +11,20 @@ public class GridSpace : MonoBehaviour {
 
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	public void setOccupant(GameObject obj){
+		occupant = obj;
+		obj.transform.parent = transform;
+		obj.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + manager.getZDiff() / 2f);
+	}
+
+	public GameObject getOccupant(){
+		return occupant;
+	}
+
+	public GameObject getAndRemoveOccupant(){
+		GameObject temp = occupant;
+		occupant = null;
+		return temp;
 	}
 }
 
