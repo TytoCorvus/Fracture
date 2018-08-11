@@ -6,9 +6,12 @@ public class GridManager : MonoBehaviour {
 
 	public GameObject gridSpacePrefab;
 	public GameObject cannonPrefab;
+	public GameObject factoryPrefab;
 
 	public Texture2D blueTileImage;
 	public Texture2D redTileImage;
+	public Texture2D cracks1;
+	public Texture2D cracks2;
 
 	private Dictionary<GridPosition , GridSpace> grid;
 	private OccupantTracker occupantTracker;
@@ -29,6 +32,16 @@ public class GridManager : MonoBehaviour {
 		temp.setOccupant(tempObj);
 		Cannon c = tempObj.GetComponent<Cannon>();
 		c.space = temp;
+
+		temp = getSpace(new GridPosition(0, -1));
+
+		tempObj = Instantiate(factoryPrefab);
+		if(temp == null){
+			Debug.Log("temp is null");
+		}
+		temp.setOccupant(tempObj);
+		Factory f = tempObj.GetComponent<Factory>();
+		f.space = temp;
 	}
 	
 	void Update(){
@@ -69,7 +82,6 @@ public class GridManager : MonoBehaviour {
 			Debug.Log("Cannot add - Grid space already exists");
 			return;
 		}
-
 		
 		GameObject temp = Instantiate(gridSpacePrefab);
 		temp.transform.SetParent(transform);

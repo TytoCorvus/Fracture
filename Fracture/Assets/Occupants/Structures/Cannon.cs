@@ -32,15 +32,10 @@ public class Cannon : Occupant {
 		Vector3 startPosition = temp.transform.position;
 		Vector3 endPosition = new Vector3(t.position.x, t.position.y + 0.4f, startPosition.z);
 
-		float xSpeed = 1;
-
-		Vector3 midpoint = (endPosition - transform.position) / 2 + transform.position;
 		float maxHeight = 2.8f;
-		float xPos = 0f;
-
-		float currentXPos = transform.position.x;
-		float currentYPos = transform.position.y;
 		float currentPercent = 0f;
+
+		CameraManager.getInstance().follow(temp, null);
 
 		while((temp.transform.position - endPosition).magnitude > 0.1f){
 			currentPercent += 0.02f;
@@ -52,7 +47,10 @@ public class Cannon : Occupant {
 		}
 
 		temp.transform.position = endPosition;
+
+		t.GetComponent<GridSpace>().takeDamage(1);
 		yield return new WaitForSeconds(0.3f);
+		CameraManager.getInstance().release();
 		Destroy(temp, 0f);
 		
 	}
