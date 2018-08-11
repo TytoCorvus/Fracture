@@ -5,11 +5,13 @@ using UnityEngine;
 public class GridManager : MonoBehaviour {
 
 	public GameObject gridSpacePrefab;
+	public GameObject cannonPrefab;
 
 	public Texture2D blueTileImage;
 	public Texture2D redTileImage;
 
 	private Dictionary<GridPosition , GridSpace> grid;
+	private OccupantTracker occupantTracker;
 	private Vector2 moveX = new Vector2(1.5f, -.8f);
 	private Vector2 moveY = new Vector2(1.5f, .8f);
 
@@ -19,8 +21,22 @@ public class GridManager : MonoBehaviour {
 	void Start () {
 		grid = new Dictionary<GridPosition, GridSpace>();
 		buildRegularMap(4, 6);
+		GridSpace temp = getSpace(new GridPosition(-2, -2));
+		GameObject tempObj = Instantiate(cannonPrefab);
+		if(temp == null){
+			Debug.Log("temp is null");
+		}
+		temp.setOccupant(tempObj);
+		Cannon c = tempObj.GetComponent<Cannon>();
+		c.space = temp;
 	}
 	
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.Space)){
+			turnPassed();
+		}
+	}
+
 	private void buildRegularMap(int width, int height){
 		GridPosition cameraTarget;
 		//cameraTarget = new GridPosition(width % 2, height % 2);
@@ -39,6 +55,14 @@ public class GridManager : MonoBehaviour {
 
 	// Update is called once per frame
 
+	
+	public bool isSpaceInGrid(GridPosition gp){
+		return grid.ContainsKey(gp);
+	}
+	public GridSpace getSpace(GridPosition gp){
+		return grid[gp];
+	}
+
 	public void addToGrid(GridPosition gp, int playerNumber){
 		//Do nothing if it already exists in the dictionary
 		if(grid.ContainsKey(gp)){
@@ -46,6 +70,7 @@ public class GridManager : MonoBehaviour {
 			return;
 		}
 
+		
 		GameObject temp = Instantiate(gridSpacePrefab);
 		temp.transform.SetParent(transform);
 		Vector2 newPos = gp.posX * moveX + gp.posY * moveY;
@@ -67,6 +92,11 @@ public class GridManager : MonoBehaviour {
 		}
 
 		sprite.sprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(.5f, .5f));
+
+
+		GridSpace space = temp.GetComponent<GridSpace>();
+		space.setup(gp, this);
+		grid.Add(gp, space);
 	}
 
 	public void removeFromGrid(GridPosition gp){
@@ -81,12 +111,32 @@ public class GridManager : MonoBehaviour {
 		}
 	}
 
-	public GridSpace getSpace(GridPosition gp){
-		return new GridSpace();
-	}
 
 	public float getZDiff(){
 		return zDiff;
+	}
+
+	public List<GridSpace> getSiblings(GridPosition gp){
+		List<GridSpace> result = new List<GridSpace>();
+
+		if(grid.ContainsKey(new GridPosition(gp.posX, gp.posY + 1))){
+			result.Add(grid[new GridPosition(gp.posX, gp.posY + 1)]);
+		}
+		if(grid.ContainsKey(new GridPosition(gp.posX, gp.posY - 1))){
+			result.Add(grid[new GridPosition(gp.posX, gp.posY - 1)]);
+		}
+		if(grid.ContainsKey(new GridPosition(gp.posX - 1, gp.posY))){
+			result.Add(grid[new GridPosition(gp.posX - 1, gp.posY)]);
+		}
+		if(grid.ContainsKey(new GridPosition(gp.posX + 1, gp.posY))){
+			result.Add(grid[new GridPosition(gp.posX + 1, gp.posY)]);
+		}
+
+		return result;
+	}
+
+	public void turnPassed(){
+
 	}
 	
 }

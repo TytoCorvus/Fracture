@@ -27,5 +27,5 @@ public abstract class Occupant : MonoBehaviour {
 
 	public abstract void kill();
 
-	public abstract void damage();
+	public abstract void damage(int n);
 }

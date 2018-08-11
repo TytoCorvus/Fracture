@@ -51,9 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Grid\OccupantTracker.cs" />
      <Compile Include="Assets\GridManager.cs" />
      <Compile Include="Assets\GridSpace.cs" />
      <Compile Include="Assets\Occupants\Occupant.cs" />
+     <Compile Include="Assets\Occupants\Structures\Cannon.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

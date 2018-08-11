@@ -6,15 +6,18 @@ public class GridSpace : MonoBehaviour {
 
 	private GridManager manager;
 	private GameObject occupant;
-	// Use this for initialization
-	void setup(){
 
+	private GridPosition position;
+	// Use this for initialization
+	public void setup(GridPosition position, GridManager manager){
+		this.position = position;
+		this.manager = manager;
 	}
 	
 	public void setOccupant(GameObject obj){
 		occupant = obj;
-		obj.transform.parent = transform;
-		obj.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + manager.getZDiff() / 2f);
+		obj.transform.SetParent(transform);
+		obj.transform.position = obj.transform.position + transform.position - new Vector3(0f, 0f, manager.getZDiff() / 2);
 	}
 
 	public GameObject getOccupant(){
@@ -25,6 +28,14 @@ public class GridSpace : MonoBehaviour {
 		GameObject temp = occupant;
 		occupant = null;
 		return temp;
+	}
+
+	public GridManager getManager(){
+		return manager;
+	}
+
+	public GridPosition getPosition(){
+		return position;
 	}
 }
 

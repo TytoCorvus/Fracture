@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4037036805164144}
   - component: {fileID: 212866351180193280}
+  - component: {fileID: 114142687257379280}
   m_Layer: 0
   m_Name: Cannon
   m_TagString: Untagged
@@ -40,6 +41,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114142687257379280
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1503429138295112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b4f3e20aead7240b02dfb2d8ad3cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  occupantUI: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  space: {fileID: 0}
+  maxHealth: 1
+  currentHealth: 1
+  turnsBetweenActions: 1
+  turnsSinceLastAction: 0
+  cannonBallPrefab: {fileID: 1970565577465338, guid: ea719b0e3db95264790145960b19db8e,
+    type: 2}
 --- !u!212 &212866351180193280
 SpriteRenderer:
   m_ObjectHideFlags: 1
