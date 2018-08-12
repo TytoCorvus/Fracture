@@ -23,12 +23,12 @@ public class GridSpace : MonoBehaviour {
 	
 	public void setOccupant(GameObject obj){
 		if(isOccupied()){
-			Destroy(occupant, 0f);
-			occupant = null;
+			return;
 		}
 		occupant = obj;
 		obj.transform.SetParent(transform);
-		obj.transform.position = obj.transform.position + transform.position - new Vector3(0f, 0f, manager.getZDiff() / 2);
+		//obj.transform.position = obj.transform.position + transform.position - new Vector3(0f, 0f, manager.getZDiff() / 2);
+		obj.transform.position = transform.position - new Vector3(0f, -.75f, manager.getZDiff() / 2);
 	}
 
 	public GameObject getOccupant(){
@@ -39,6 +39,10 @@ public class GridSpace : MonoBehaviour {
 		GameObject temp = occupant;
 		occupant = null;
 		return temp;
+	}
+
+	public void removeOccupant(){
+		occupant = null;
 	}
 
 	public GridManager getManager(){

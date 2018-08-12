@@ -21,6 +21,9 @@ public class Cannon : Occupant {
 			Transform endpoint = space.getManager().getSpace(target).gameObject.transform;
 			StartCoroutine(cannonLaunch(endpoint, callback));
 		}
+		else{
+			callback();
+		}
 	}
 
 	IEnumerator cannonLaunch(Transform t, Action callback){

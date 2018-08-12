@@ -26,9 +26,9 @@ public abstract class Occupant : MonoBehaviour {
 	public virtual void endOfTurnUpdate(Action callback){
 		turnsSinceLastAction++;
 		if(turnsSinceLastAction == turnsBetweenActions){
-			
-			act(callback);
 			turnsSinceLastAction = 0;
+			act(callback);
+			
 		}
 	}
 

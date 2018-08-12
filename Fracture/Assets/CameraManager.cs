@@ -58,7 +58,6 @@ public class CameraManager : MonoBehaviour {
 			yield return null;
 		}
 
-		Debug.Log("released!");
 		following = null;
 		released = false;
 		StartCoroutine(returnToNeutral(callback));
@@ -72,7 +71,6 @@ public class CameraManager : MonoBehaviour {
 			yield return null;
 		}
 
-		Debug.Log("Returned to neutral");
 		transform.position = neutralPosition;
 		available = true;
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class OccupantTracker{
 
+	public static OccupantTracker instance;
+
 	private List<Occupant> player1Occupants;
 	private List<Occupant> player2Occupants;
 
@@ -12,13 +14,29 @@ public class OccupantTracker{
 		player1Occupants = new List<Occupant>();
 		player2Occupants = new List<Occupant>();
 		updateQueue = new Queue<Occupant>();
+		instance = this;
 	}
 
 	public void updateOccupants(int playerNumber){
 		updateQueue.Clear();
-		player1Occupants.ForEach(occupant => {
-			updateQueue.Enqueue(occupant);
-		});
+
+		if(playerNumber == 1){
+			//clean(player1Occupants);
+			player1Occupants.ForEach(occupant => {
+				if(occupant != null){
+					updateQueue.Enqueue(occupant);
+				}
+			});
+		}
+		else if(playerNumber == 2){
+			player2Occupants.ForEach(occupant => {
+				//clean(player2Occupants);
+				if(occupant != null){
+					updateQueue.Enqueue(occupant);
+				}
+			});
+		}
+
 		nextInQueue();
 	}
 
@@ -27,6 +45,8 @@ public class OccupantTracker{
 		if(updateQueue.Count != 0){
 			occupant = updateQueue.Dequeue();
 		} 
+
+
 		if(occupant != null){
 			occupant.endOfTurnUpdate(nextInQueue);
 		}
@@ -47,4 +67,27 @@ public class OccupantTracker{
 			player2Occupants.Add(occupant);
 		}
 	}
+
+	public int getNumberOfOccupants(){
+		return player1Occupants.Count;
+	}
+
+	public void removeOccupant(Occupant occupant, int playerNum){
+		if(playerNum == 1){
+			player1Occupants.Remove(occupant);
+		}
+		if(playerNum == 2){
+			player2Occupants.Remove(occupant);
+		}
+	}
+
+	public void clean(List<Occupant> toClean){
+		for(int i = 0; i < toClean.Count; i++){
+			if(toClean[i] == null){
+				toClean.RemoveAt(i);
+				i--;
+			}
+		}
+	}
+
 }

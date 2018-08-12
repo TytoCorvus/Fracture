@@ -16,22 +16,25 @@ public class Factory : Occupant {
 
 	public override void setup(GridSpace space, int owner, OccupantTracker tracker){
 		base.setup(space, owner, tracker);
-		turnsBetweenActions = 2;
+		turnsBetweenActions = 1;
 	}
 	public override void act(Action callback){
 		GridPosition target = new GridPosition(space.getPosition().posX, space.getPosition().posY + 1);
-		bool targetAvailable = space.getManager().isSpaceInGrid(target);
-
+		bool targetAvailable = !space.getManager().getSpace(target).isOccupied();
 
 		if(targetAvailable){
+			Debug.Log("Target available");
 			GridSpace bombSpace = space.getManager().getSpace(target);
 			GameObject temp = Instantiate(bombPrefab);
 
 			Occupant o = temp.GetComponent<Occupant>();
-			o.setup(bombSpace, owner, bombSpace.getManager().getOccupantTracker());
-			((WalkingBomb)o).move(callback);
+			o.setup(bombSpace, owner, OccupantTracker.instance);
+			//((WalkingBomb)o).move(callback);
+			callback();
 		}
-		else{callback();}
+		else{
+			Debug.Log("Target NOT available");
+			callback();}
 	}
 	public override void kill(){
 
