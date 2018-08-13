@@ -39,18 +39,11 @@ public class Factory : Occupant {
 
 			Occupant o = temp.GetComponent<Occupant>();
 			o.setup(bombSpace, owner, OccupantTracker.instance);
-			//((WalkingBomb)o).move(callback);
+			((WalkingBomb)o).sprite();
 			callback();
 		}
 		else{
 			callback();}
-	}
-	public override void kill(){
-
-	}
-
-	public override void damage(int n){
-
 	}
 
 

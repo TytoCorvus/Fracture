@@ -68,6 +68,12 @@ public class OccupantTracker{
 		
 	}
 
+	public void cleanQueue(){
+		while(updateQueue.Count > 0){
+			updateQueue.Dequeue();
+		}
+	}
+
 	public void addOccupant(Occupant occupant, int playerNum){
 		if(playerNum == 1){
 			player1Occupants.Add(occupant);

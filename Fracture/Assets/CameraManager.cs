@@ -10,12 +10,43 @@ public class CameraManager : MonoBehaviour {
 	private static GameObject following = null;
 	private static Vector3 neutralPosition = new Vector3(0f, 0f, -10f);
 	private static float neutralCamSize = 6f;
+
+	private static float panSpeed = 1f;
 	private static Camera camera;
 	private static CameraManager instance;
 
 	void Start(){
 		camera = GetComponent<Camera>();
 		instance = this;
+	}
+
+	void Update(){
+		if(available){
+			if(Input.GetMouseButtonDown(1)){
+				available = false;
+				StartCoroutine(panningCamera());
+			}
+		}
+		
+	}
+
+	IEnumerator panningCamera(){
+		Vector3 startingPos = Input.mousePosition;
+		yield return null;
+
+		while(Input.GetMouseButton(1)){
+			Vector3 currentMousePos = Input.mousePosition;
+
+			Vector3 dir = (currentMousePos - startingPos).normalized;
+			float mag = (currentMousePos - startingPos).magnitude;
+
+			transform.position += dir * Mathf.Pow(mag, 0.5f) * panSpeed * Time.deltaTime;
+			
+
+			yield return null;
+		}
+
+		available = true;
 	}
 
 	public static bool getAvailable(){

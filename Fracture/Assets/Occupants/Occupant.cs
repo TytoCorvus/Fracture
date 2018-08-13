@@ -35,8 +35,18 @@ public abstract class Occupant : MonoBehaviour {
 	public abstract void updateUI();
 	public abstract void act(Action callback);
 
-	public abstract void kill();
+		public virtual void damage(int n){
+		currentHealth -= n;
+		if(n <= 0){
+			kill();
+		}
+	}
 
-	public abstract void damage(int n);
+	public virtual void kill(){
+		space.removeOccupant();
+		Destroy(gameObject, 0f);
+	}
+
+
 
 }

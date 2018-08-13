@@ -27,15 +27,11 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.Space)){
-			endTurn();
-		}
-		
 		//Janky but reliable way of switching between 1 and 2 :P
 		
 	}
 
-	private void endTurn(){
+	public void endTurn(){
 		gridManager.endTurn(activePlayer);
 	}
 
@@ -137,6 +133,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void gameOver(int winner){
+		gridManager.getOccupantTracker().cleanQueue();
+		uiManager.setGameOverText(winner);
 		Debug.Log("Player " + winner + " wins!");
 	}
 

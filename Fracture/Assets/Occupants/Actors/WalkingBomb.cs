@@ -9,6 +9,9 @@ public class WalkingBomb : Bomb {
 	private float walkSpeed = 2f;
 	private bool detonated = false;
 
+	public Texture2D blueBomb;
+	public Texture2D redBomb;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -21,6 +24,17 @@ public class WalkingBomb : Bomb {
 	}
 
 	public override void updateUI(){}
+
+
+	public void sprite(){
+		if(owner == 1){}
+		else{ 
+			SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+			Sprite tempSprite = Sprite.Create(redBomb, new Rect(0f, 0f, redBomb.width, redBomb.height), new Vector2(.5f, .5f));
+			renderer.sprite = tempSprite;
+		}
+	}
+
 	public override void act(Action callback){
 		move(callback);
 	}
