@@ -61,6 +61,7 @@
      <Compile Include="Assets\Occupants\Occupant.cs" />
      <Compile Include="Assets\Occupants\Structures\Cannon.cs" />
      <Compile Include="Assets\Occupants\Structures\Factory.cs" />
+     <Compile Include="Assets\UIManager.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

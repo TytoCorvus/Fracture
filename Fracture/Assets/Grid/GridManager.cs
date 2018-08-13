@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour {
@@ -14,40 +15,28 @@ public class GridManager : MonoBehaviour {
 	public Texture2D cracks2;
 
 	private Dictionary<GridPosition , GridSpace> grid;
+	private List<GridSpace> spaces;
 	private OccupantTracker occupantTracker;
+	public GameManager gameManager;
 	private Vector2 moveX = new Vector2(1.5f, -.8f);
 	private Vector2 moveY = new Vector2(1.5f, .8f);
 
 	private float zDiff = 0.01f;
 	
-	// Use this for initialization
-	void Start () {
+	// Use this for 
+	
+	public void setup(Action callback){
 		grid = new Dictionary<GridPosition, GridSpace>();
-		occupantTracker = new OccupantTracker();
+		spaces = new List<GridSpace>();
+		occupantTracker = new OccupantTracker(gameManager);
 
 		buildRegularMap(4, 6);
-		GridSpace temp = getSpace(new GridPosition(-2, -2));
-		GameObject tempObj = Instantiate(cannonPrefab);
-		if(temp == null){
-			Debug.Log("temp is null");
-		}
-		Cannon c = tempObj.GetComponent<Cannon>();
-		c.setup(temp, 1, occupantTracker);
+		addTestingOccupants();
 
-		temp = getSpace(new GridPosition(0, -1));
-
-		tempObj = Instantiate(factoryPrefab);
-		if(temp == null){
-			Debug.Log("temp is null");
+		if(callback != null){
+			callback();
 		}
-		Factory f = tempObj.GetComponent<Factory>();
-		f.setup(temp, 1, occupantTracker);
-	}
-	
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.Space)){
-			turnPassed();
-		}
+		
 	}
 
 	private void buildRegularMap(int width, int height){
@@ -66,9 +55,36 @@ public class GridManager : MonoBehaviour {
 		}
 	}
 
-	// Update is called once per frame
+	private void addTestingOccupants(){
+		GridSpace temp = getSpace(new GridPosition(-2, -2));
+		GameObject tempObj = Instantiate(cannonPrefab);
+		if(temp == null){
+			Debug.Log("temp is null");
+		}
+		Cannon c = tempObj.GetComponent<Cannon>();
+		c.setup(temp, 1, occupantTracker);
 
-	
+		temp = getSpace(new GridPosition(0, -1));
+
+		tempObj = Instantiate(factoryPrefab);
+		if(temp == null){
+			Debug.Log("temp is null");
+		}
+		Factory f = tempObj.GetComponent<Factory>();
+		f.setup(temp, 1, occupantTracker);
+
+		temp = getSpace(new GridPosition(1, 2));
+
+		tempObj = Instantiate(factoryPrefab);
+		if(temp == null){
+			Debug.Log("temp is null");
+		}
+		f = tempObj.GetComponent<Factory>();
+		f.setup(temp, 2, occupantTracker);
+
+	}
+
+	// Update is called once per frame
 	public bool isSpaceInGrid(GridPosition gp){
 		return grid.ContainsKey(gp);
 	}
@@ -107,14 +123,23 @@ public class GridManager : MonoBehaviour {
 
 
 		GridSpace space = temp.GetComponent<GridSpace>();
-		space.setup(gp, this);
+		space.setup(gp, this, playerNumber);
 		grid.Add(gp, space);
+		spaces.Add(space);
+
 	}
 
 	public void removeFromGrid(GridPosition gp){
 		if(grid.ContainsKey(gp)){
+			GridSpace temp = grid[gp];
 			grid.Remove(gp);
+			if(temp != null){
+				spaces.Remove(temp);
+			}
 		}
+		else{
+		}
+		
 	}
 
 	public void addtoSpace(GridPosition gp, GameObject new_occupant){
@@ -147,12 +172,16 @@ public class GridManager : MonoBehaviour {
 		return result;
 	}
 
-	public void turnPassed(){
-		occupantTracker.updateOccupants(1);
+	public void endTurn(int player){
+		occupantTracker.updateOccupants(player);
 	}
 	
 	public OccupantTracker getOccupantTracker(){
 		return occupantTracker;
+	}
+
+	public List<GridSpace> getWholeGrid(){
+		return spaces;
 	}
 
 }

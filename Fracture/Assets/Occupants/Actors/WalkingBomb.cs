@@ -7,6 +7,7 @@ public class WalkingBomb : Bomb {
 
 	private int bombDamage = 1;
 	private float walkSpeed = 2f;
+	private bool detonated = false;
 
 	// Use this for initialization
 	void Start () {
@@ -47,16 +48,9 @@ public class WalkingBomb : Bomb {
 	IEnumerator walkToNewSpace(GridSpace newSpace, Action callback){
 		Transform target = newSpace.gameObject.transform;
 		Vector3 destination = new Vector3(target.position.x, target.position.y + 0.75f, target.position.z - space.getManager().getZDiff());
-		//Vector3 destination = new Vector3(transform.position.x + )
 		Vector3 direction = (destination - transform.position).normalized;
 
-		CameraManager.getInstance().follow(gameObject, null);
-
-		Debug.Log("Starting grid: " + space.getPosition().posX + "," + space.getPosition().posY);
-		Debug.Log("Ending grid: " + newSpace.getPosition().posX + "," + newSpace.getPosition().posY);
-
-		Debug.Log("Starting Position: " + transform.position.ToString());
-		Debug.Log("Target Position: " + destination.ToString());
+		CameraManager.getInstance().follow(gameObject, callback);
 
 		while((transform.position - destination).magnitude > 0.05f){
 
@@ -71,12 +65,11 @@ public class WalkingBomb : Bomb {
 		space = newSpace;
 		transform.position = destination;
 		CameraManager.getInstance().release();
-		callback();
 	}
 
 	public override void damage(int n){
 		if(n > 0){
-			kill();
+			detonate();
 		}
 	}
 
@@ -88,30 +81,40 @@ public class WalkingBomb : Bomb {
 
 
 	public override void detonate(){
+		if(detonated){
+			space.damageTileOnly(bombDamage);
+			return;
+		}
+
+		detonated = true;
 		List<GridSpace> targets = space.getManager().getSiblings(space.getPosition());
-		Debug.Log(targets.Count + " Siblings found");
-		targets.Add(space);
-		/* 
+		targets.Add(space);	
 		List<GridSpace> hasBombs = new List<GridSpace>();
+/* 
 		for(int i = 0; i < targets.Count; i++){
 			if(targets[i].isOccupied() && (targets[i].getOccupant().GetType() == typeof(Bomb) && targets[i].getOccupant() != this)){
 				hasBombs.Add(targets[i]);
 			}
 		}
-
+*/
 		targets.ForEach(gridSpace => {
-			if(!hasBombs.Contains(gridSpace)){
+			if(gridSpace == space){
+				gridSpace.damageTileOnly(bombDamage);
+			}
+			else if(gridSpace != space && gridSpace.isOccupied() && gridSpace.getOccupant().GetComponent<Occupant>().GetType() == typeof(Bomb)){
+				gridSpace.damageTileOnly(bombDamage);
+				((Bomb)gridSpace.getOccupant().GetComponent<Occupant>()).detonate();
+			}
+			else{
 				gridSpace.damage(bombDamage);
 			}
+		
 		});
 
 		hasBombs.ForEach(gridSpace => {
 			gridSpace.getOccupant().GetComponent<Bomb>().detonate();
 		});
-		*/
-		targets.ForEach(gridSpace => {
-			gridSpace.damage(1);
-		});
+		
 		kill();
 	}
 

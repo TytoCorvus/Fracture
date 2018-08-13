@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class OccupantTracker{
 
@@ -9,11 +10,13 @@ public class OccupantTracker{
 	private List<Occupant> player2Occupants;
 
 	private Queue<Occupant> updateQueue;
+	private GameManager gameManager;
 
-	public OccupantTracker(){
+	public OccupantTracker(GameManager gm){
 		player1Occupants = new List<Occupant>();
 		player2Occupants = new List<Occupant>();
 		updateQueue = new Queue<Occupant>();
+		gameManager = gm;
 		instance = this;
 	}
 
@@ -44,19 +47,25 @@ public class OccupantTracker{
 		Occupant occupant = null;
 		if(updateQueue.Count != 0){
 			occupant = updateQueue.Dequeue();
+				if(occupant != null){
+					occupant.endOfTurnUpdate(nextInQueue);
+				}
 		} 
-
-
-		if(occupant != null){
-			occupant.endOfTurnUpdate(nextInQueue);
-		}
-		if(updateQueue.Count == 0){
+		else if(updateQueue.Count == 0){
 			queueCompleted();
 		}
 	}
 
 	public void queueCompleted(){
+		gameManager.updateGameState();
+	}
 
+	public void activatePlayerOccupants(int player){
+
+	}
+
+	public void deactivateAllOccupants(){
+		
 	}
 
 	public void addOccupant(Occupant occupant, int playerNum){

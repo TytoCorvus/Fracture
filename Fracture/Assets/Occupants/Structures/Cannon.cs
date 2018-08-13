@@ -35,7 +35,7 @@ public class Cannon : Occupant {
 		float maxHeight = 2.8f;
 		float currentPercent = 0f;
 
-		CameraManager.getInstance().follow(temp, null);
+		CameraManager.getInstance().follow(temp, callback);
 
 		while((temp.transform.position - endPosition).magnitude > 0.1f){
 			currentPercent += 0.02f;
@@ -51,7 +51,6 @@ public class Cannon : Occupant {
 		t.GetComponent<GridSpace>().damage(1);
 		yield return new WaitForSeconds(0.3f);
 		CameraManager.getInstance().release();
-		callback();
 		Destroy(temp, 0f);
 		
 	}

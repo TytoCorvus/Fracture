@@ -7,23 +7,33 @@ public class Factory : Occupant {
 
 	public GameObject bombPrefab;
 
-	public override void updateUI(){
+	public Texture2D player2Sprite;
 
-	}
-
-	void Update(){
-	}
+	public override void updateUI(){}
 
 	public override void setup(GridSpace space, int owner, OccupantTracker tracker){
 		base.setup(space, owner, tracker);
 		turnsBetweenActions = 1;
+
+		if(owner == 2){
+			SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+			Sprite tempSprite = Sprite.Create(player2Sprite, new Rect(0f, 0f, player2Sprite.width, player2Sprite.height), new Vector2(.5f, .5f));
+			renderer.sprite = tempSprite;
+		}
+
 	}
+
 	public override void act(Action callback){
-		GridPosition target = new GridPosition(space.getPosition().posX, space.getPosition().posY + 1);
+		GridPosition target = new GridPosition(0, 0);
+		if(owner == 1){
+			target = new GridPosition(space.getPosition().posX, space.getPosition().posY + 1);
+		} 
+		else{
+			target = new GridPosition(space.getPosition().posX, space.getPosition().posY - 1);
+		}
 		bool targetAvailable = !space.getManager().getSpace(target).isOccupied();
 
 		if(targetAvailable){
-			Debug.Log("Target available");
 			GridSpace bombSpace = space.getManager().getSpace(target);
 			GameObject temp = Instantiate(bombPrefab);
 
@@ -33,7 +43,6 @@ public class Factory : Occupant {
 			callback();
 		}
 		else{
-			Debug.Log("Target NOT available");
 			callback();}
 	}
 	public override void kill(){

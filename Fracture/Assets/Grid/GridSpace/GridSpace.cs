@@ -13,12 +13,14 @@ public class GridSpace : MonoBehaviour {
 
 	private int spaceMaxHealth = 3;
 	private int spaceCurrentHealth = 3;
+	public int tileOwner;
 	
 	// Use this for initialization
 
-	public void setup(GridPosition position, GridManager manager){
+	public void setup(GridPosition position, GridManager manager, int tileOwner){
 		this.position = position;
 		this.manager = manager;
+		this.tileOwner = tileOwner;
 	}
 	
 	public void setOccupant(GameObject obj){
@@ -70,6 +72,11 @@ public class GridSpace : MonoBehaviour {
 		updateStatus();		
 	}
 
+	public void damageTileOnly(int dmg){
+		spaceCurrentHealth -= dmg;
+		updateStatus();
+	}
+
 	public void repair(int val){
 		spaceCurrentHealth += val;
 		if(spaceCurrentHealth > spaceMaxHealth){
@@ -96,7 +103,12 @@ public class GridSpace : MonoBehaviour {
 	}
 
 	private void die(){
+		if(isOccupied()){
+			occupant.GetComponent<Occupant>().kill();
+		}
+
 		manager.removeFromGrid(position);
+		manager.gameManager.panelDestroyed();
 		Destroy(gameObject, 0f);
 	}
 }
