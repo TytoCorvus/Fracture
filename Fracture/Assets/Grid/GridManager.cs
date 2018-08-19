@@ -31,8 +31,8 @@ public class GridManager : MonoBehaviour {
 		spaces = new List<GridSpace>();
 		occupantTracker = new OccupantTracker(gameManager);
 
-		buildRegularMap(4, 6);
-		addTestingOccupants();
+		buildRegularMap(5, 6);
+		//addTestingOccupants();
 
 		if(callback != null){
 			callback();

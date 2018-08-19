@@ -26,6 +26,10 @@ public class GameManager : MonoBehaviour {
 		updateUI();
 	}
 
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.Escape)){ Application.Quit();}
+	}
+
 	public void endTurn(){
 		uiManager.hideActionPanel();
 		gridManager.endTurn(activePlayer);
