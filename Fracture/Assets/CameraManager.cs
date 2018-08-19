@@ -41,7 +41,6 @@ public class CameraManager : MonoBehaviour {
 			float mag = (currentMousePos - startingPos).magnitude;
 
 			transform.position += dir * Mathf.Pow(mag, 0.5f) * panSpeed * Time.deltaTime;
-			
 
 			yield return null;
 		}

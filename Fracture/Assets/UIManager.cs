@@ -20,8 +20,17 @@ public class UIManager : MonoBehaviour {
 
 	public GameObject gameOverPanel;
 
+	private IEnumerator messageCoroutine;
+	
+	public Image messageBackground;
+	public Text messageText;
+	public float messageDuration = 1.8f;
+
+	public Animator actionPanelAnimator; 
+	public Animator buildPanelAnimator;
 	void Start(){
 		gameOverPanel.SetActive(false);
+		//showMessage("This is a temp message!");
 	}
 
 	public void updateScores(int p1Current, int p1Max, int p2Current, int p2Max, int p1Lose, int p2Lose, int turnNumber, int activePlayer){
@@ -54,4 +63,68 @@ public class UIManager : MonoBehaviour {
 
 
 	}
+
+	public void showMessage(string message){
+		if(messageCoroutine == null){
+			messageCoroutine = messageCycle(message);
+			StartCoroutine(messageCoroutine);
+		}
+	}
+
+	IEnumerator messageCycle(string message){
+		messageText.text = message;
+
+		float alpha = 0f;
+		while(alpha <= 1f){
+			alpha += 0.02f;
+
+			Color tempColor = messageText.color;
+			tempColor.a = alpha;
+			messageText.color = tempColor;
+
+			tempColor = Color.black;
+			tempColor.a = alpha * 0.5f;
+			messageBackground.color = tempColor;
+
+			yield return null;
+		}
+
+		yield return new WaitForSeconds(messageDuration);
+
+		while(alpha >= 0f){
+			alpha -= 0.02f;
+
+			Color tempColor = messageText.color;
+			tempColor.a = alpha;
+			messageText.color = tempColor;
+
+			tempColor = messageBackground.color;
+			tempColor.a = alpha * 0.5f;
+			messageBackground.color = tempColor;
+
+			yield return null;
+		}
+
+		alpha = 0f;
+		Color tempColor2 = messageText.color;
+		tempColor2.a = alpha;
+		messageText.color = tempColor2;
+
+		tempColor2 = messageBackground.color;
+		tempColor2.a = alpha * 0.5f;
+		messageBackground.color = tempColor2;
+
+		messageCoroutine = null;
+	}
+
+	public void hideActionPanel(){
+		actionPanelAnimator.SetTrigger("TriggerOut");
+	}
+
+	public void showActionPanel(){
+		actionPanelAnimator.SetTrigger("TriggerIn");
+	}
+
+
+
 }

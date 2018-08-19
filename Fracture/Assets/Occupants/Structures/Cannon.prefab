@@ -55,12 +55,14 @@ MonoBehaviour:
   occupantUI: {fileID: 0}
   spriteRenderer: {fileID: 0}
   space: {fileID: 0}
+  owner: 0
   maxHealth: 1
   currentHealth: 1
   turnsBetweenActions: 1
   turnsSinceLastAction: 0
   cannonBallPrefab: {fileID: 1970565577465338, guid: ea719b0e3db95264790145960b19db8e,
     type: 2}
+  player2Sprite: {fileID: 2800000, guid: ec4523ba62e29cc42a15f223ee43669f, type: 3}
 --- !u!212 &212866351180193280
 SpriteRenderer:
   m_ObjectHideFlags: 1

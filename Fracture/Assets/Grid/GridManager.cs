@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour {
@@ -184,7 +185,69 @@ public class GridManager : MonoBehaviour {
 		return spaces;
 	}
 
+	public List<GridSpace> getMoveSpaces(GridSpace gs){
+		List<GridSpace> results = new List<GridSpace>();
+		if(isSpaceInGrid(gs.getPosition())){
+			int o = gs.tileOwner;
+
+		results.AddRange(getEmptySpacesInLine(gs.getPosition(), GridDirection.UP, o));
+		results.AddRange(getEmptySpacesInLine(gs.getPosition(), GridDirection.DOWN, o));
+		results.AddRange(getEmptySpacesInLine(gs.getPosition(), GridDirection.LEFT, o));
+		results.AddRange(getEmptySpacesInLine(gs.getPosition(), GridDirection.RIGHT, o));
+		}
+
+		return results;
+	}
+
+	public List<GridSpace> getMoveSpaces(GridPosition gp){
+		List<GridSpace> results = new List<GridSpace>();
+		if(isSpaceInGrid(gp)){
+			int o = grid[gp].tileOwner;
+
+		results.AddRange(getEmptySpacesInLine(gp, GridDirection.UP, o));
+		results.AddRange(getEmptySpacesInLine(gp, GridDirection.DOWN, o));
+		results.AddRange(getEmptySpacesInLine(gp, GridDirection.LEFT, o));
+		results.AddRange(getEmptySpacesInLine(gp, GridDirection.RIGHT, o));
+		}
+		
+
+		return results;
+	}
+
+	public List<GridSpace> getEmptySpacesInLine(GridPosition gp, GridDirection dir, int o){
+		List<GridSpace> results = new List<GridSpace>();
+		int changeX = 0;
+		int changeY = 0;
+
+		switch(dir){
+			case GridDirection.RIGHT:
+				changeX = 1;
+				break;
+			case GridDirection.UP:
+				changeY = 1;
+				break;
+			case GridDirection.LEFT:
+				changeX = -1;
+				break;
+			case GridDirection.DOWN:
+				changeY = -1;
+				break;
+		}
+		
+		GridPosition newPosition = new GridPosition(gp.posX + changeX, gp.posY + changeY);
+
+		while(isSpaceInGrid(newPosition) && !grid[newPosition].isOccupied() && o == grid[newPosition].tileOwner){
+			results.Add(grid[newPosition]);
+			newPosition.posX += changeX;
+			newPosition.posY += changeY;
+		}
+
+		return results;
+	}
+
 }
+
+
 
 public struct GridPosition{
 	public int posX, posY;

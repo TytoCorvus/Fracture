@@ -6,15 +6,32 @@ using UnityEngine;
 public class Cannon : Occupant {
 
 	public GameObject cannonBallPrefab;
+	public Texture2D player2Sprite;
 
 	public override void updateUI(){
 
 	}
 
-	void Update(){
+	public override void setup(GridSpace space, int owner, OccupantTracker tracker){
+		base.setup(space, owner, tracker);
+		turnsBetweenActions = 1;
+		
+		if(owner == 2){
+			SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+			Sprite tempSprite = Sprite.Create(player2Sprite, new Rect(0f, 0f, player2Sprite.width, player2Sprite.height), new Vector2(.5f, .5f));
+			renderer.sprite = tempSprite;
+		}
 	}
 	public override void act(Action callback){
-		GridPosition target = new GridPosition(space.getPosition().posX, space.getPosition().posY + 3);
+		GridPosition target;
+
+		if(owner == 1){
+			target = new GridPosition(space.getPosition().posX, space.getPosition().posY + 3);
+		}
+		else{
+			target = new GridPosition(space.getPosition().posX, space.getPosition().posY - 3);
+		}
+
 		bool targetAvailable = space.getManager().isSpaceInGrid(target);
 
 		if(targetAvailable){
@@ -30,7 +47,7 @@ public class Cannon : Occupant {
 		GameObject temp = Instantiate(cannonBallPrefab);
 		temp.transform.position = transform.position + new Vector3(0.6f, 0.5f, 0f);
 		Vector3 startPosition = temp.transform.position;
-		Vector3 endPosition = new Vector3(t.position.x, t.position.y + 0.4f, startPosition.z);
+		Vector3 endPosition = new Vector3(t.position.x, t.position.y + 0.4f, t.position.z - space.getManager().getZDiff());
 
 		float maxHeight = 2.8f;
 		float currentPercent = 0f;
@@ -53,13 +70,5 @@ public class Cannon : Occupant {
 		CameraManager.getInstance().release();
 		Destroy(temp, 0f);
 		
-	}
-
-	public override void kill(){
-
-	}
-
-	public override void damage(int n){
-
 	}
 }

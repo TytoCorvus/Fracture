@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
@@ -24,15 +25,14 @@ public class GameManager : MonoBehaviour {
 		getBoardStatusInitial();
 		updateUI();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		//Janky but reliable way of switching between 1 and 2 :P
-		
-	}
 
 	public void endTurn(){
+		uiManager.hideActionPanel();
 		gridManager.endTurn(activePlayer);
+	}
+
+	public int getActivePlayer(){
+		return activePlayer;
 	}
 
 	public void updateGameState(){
@@ -44,12 +44,12 @@ public class GameManager : MonoBehaviour {
 		updateUI();
 	}
 
-	private void updateUI(){
-		uiManager.updateScores(player1CurrentTiles, player1TotalTiles, player2CurrentTiles, player2TotalTiles, getLosingValue(1), getLosingValue(2), turnNumber, activePlayer);
+	public void newTurnAnimation(){
+		uiManager.showActionPanel();
 	}
 
-	private void checkVictoryState(){
-
+	private void updateUI(){
+		uiManager.updateScores(player1CurrentTiles, player1TotalTiles, player2CurrentTiles, player2TotalTiles, getLosingValue(1), getLosingValue(2), turnNumber, activePlayer);
 	}
 
 	public void panelDestroyed(){
@@ -75,7 +75,6 @@ public class GameManager : MonoBehaviour {
 
 		checkEndGame();
 	}
-
 
 	private void getBoardStatusInitial(){
 		List<GridSpace> tempSpaces = gridManager.getWholeGrid();
@@ -133,10 +132,14 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void gameOver(int winner){
+		uiManager.hideActionPanel();
 		gridManager.getOccupantTracker().cleanQueue();
 		uiManager.setGameOverText(winner);
 		Debug.Log("Player " + winner + " wins!");
 	}
 
+	public void restart(){
+		SceneManager.LoadScene("GameScene");
+	}
 
 }

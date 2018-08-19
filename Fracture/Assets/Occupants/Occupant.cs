@@ -35,9 +35,9 @@ public abstract class Occupant : MonoBehaviour {
 	public abstract void updateUI();
 	public abstract void act(Action callback);
 
-		public virtual void damage(int n){
+	public virtual void damage(int n){
 		currentHealth -= n;
-		if(n <= 0){
+		if(currentHealth <= 0){
 			kill();
 		}
 	}

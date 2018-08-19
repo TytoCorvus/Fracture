@@ -58,6 +58,7 @@ public class OccupantTracker{
 
 	public void queueCompleted(){
 		gameManager.updateGameState();
+		gameManager.newTurnAnimation();
 	}
 
 	public void activatePlayerOccupants(int player){

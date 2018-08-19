@@ -56,6 +56,8 @@
      <Compile Include="Assets\Grid\GridManager.cs" />
      <Compile Include="Assets\Grid\GridSpace\GridSpace.cs" />
      <Compile Include="Assets\Grid\OccupantTracker.cs" />
+     <Compile Include="Assets\InputManager.cs" />
+     <Compile Include="Assets\OccupantPrefabs.cs" />
      <Compile Include="Assets\Occupants\Actors\Bomb.cs" />
      <Compile Include="Assets\Occupants\Actors\WalkingBomb.cs" />
      <Compile Include="Assets\Occupants\Occupant.cs" />
